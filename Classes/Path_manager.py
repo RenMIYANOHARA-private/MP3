@@ -7,7 +7,9 @@ class Path_info:
 
     def __init__(self):
 
-        self.sound_data_type = ['mp3']
+        #  self.sound_data_type = ['mp3']
+
+        self.header_file_list = [['#  ', 'Old name', 'New name']]
         self.list_tags_target = [ 'lyricist', 'length', 'media', 'mood', 'title']
 
         self.header_original_files_edit = ['original', 'edited']
@@ -19,7 +21,6 @@ class Path_info:
         self.path_dictionary = self.path_abs + '//Dictionary//'
 
         self.list_genre = [os.path.basename(i) for i in os.listdir(self.path_data_original)]
-        print(self.list_genre)
 
         if not os.path.exists(self.path_data_original):
             os.mkdir(self.path_data_original)
@@ -50,10 +51,11 @@ class Path_info:
             self.list_sound_files = [os.path.basename(i) for i in glob.glob(self.path_data_original + genre + '/*.mp3')]
 
             list_sound_files = pd.DataFrame(self.list_sound_files)
+            header_file_list = pd.DataFrame(self.header_file_list)
 
-            list_sound_files.to_csv(self.path_dictionary + '{}.csv'.format(genre))
-            print(self.path_data_original + '{}.csv'.format(genre) + 'list')
-
+            header_file_list.to_csv(self.path_dictionary + '{}.csv'.format(genre), mode='w', header=False, index=False)
+            list_sound_files.to_csv(self.path_dictionary + '{}.csv'.format(genre), mode='a', header=False)
+            print('List ' + self.path_dictionary + '{}.csv'.format(genre))
 
 
 self = Path_info()
