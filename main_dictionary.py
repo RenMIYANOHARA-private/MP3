@@ -6,6 +6,7 @@ if __name__ == '__main__':
     file_info = File_info()
 
     list_genre = file_info.list_genre
+    file_info.set_specific_version()
 
     for genre in list_genre:
 

@@ -7,7 +7,6 @@ class Path_info:
 
     def __init__(self):
 
-        self.header_original_files_edit = ['original', 'edited']
         self.path_abs = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
         self.path_data_original = self.path_abs + '//Data Original//'
         self.path_data_format = self.path_abs + '//Data Format//'

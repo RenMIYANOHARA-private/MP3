@@ -13,7 +13,7 @@ class File_info:
         mode = 'w' >>> Update all files.
         """
 
-        path_info = Path_info()
+        self.path_info = Path_info()
 
         self.mode = mode
 
@@ -21,17 +21,19 @@ class File_info:
         self.list_tags_target = ['lyricist', 'length', 'media', 'mood', 'title']
         self.kinds_of_file = ['mp3', 'aac', 'wma', 'wav']
 
-        self.path_data_original = path_info.path_data_original
-        self.path_dictionary = path_info.path_dictionary
+        self.path_data_original = self.path_info.path_data_original
+        self.path_dictionary = self.path_info.path_dictionary
 
         self.genre = None
-        self.list_genre = path_info.list_genre
+        self.list_genre = self.path_info.list_genre
 
-        path_info.make_directory()
-        path_info.make_internal_dictionary(mkdir=True)
-        self.n_dictionary_version = path_info.n_dictionary_version
-        self.path_dictionary_version = path_info.path_dictionary_version
-        self.path_dictionary_pre_version = path_info.path_dictionary_pre_version
+    def set_specific_version(self):
+
+        self.path_info.make_directory()
+        self.path_info.make_internal_dictionary(mkdir=True)
+        self.n_dictionary_version = self.path_info.n_dictionary_version
+        self.path_dictionary_version = self.path_info.path_dictionary_version
+        self.path_dictionary_pre_version = self.path_info.path_dictionary_pre_version
 
     def gather_all_type_file(self):
 
@@ -40,7 +42,8 @@ class File_info:
         for k in self.kinds_of_file:
 
             self.files_name = self.files_name + [os.path.basename(i) for i in glob.glob(self.path_data_original +
-                                                                                   self.genre + '/*.{}'.format(k))]
+                                                                                        self.genre + '/*.{}'.format(k))]
+
 
     def check_previous_version(self):
 
@@ -51,11 +54,11 @@ class File_info:
 
         else:
 
-            data = pd.read_csv(self.path_dictionary_pre_version + '{}.csv'.format(self.genre))
+            data = pd.read_csv(self.path_dictionary_pre_version + '{}.csv'
+                               .format(self.genre), encoding='cp932')
             pre_files_name = data[self.header_file_list[1]]
 
             self.n_pre_files = len(pre_files_name)
-            print(self.n_pre_files)
 
             for pre_file in pre_files_name:
 
@@ -83,7 +86,7 @@ class File_info:
             header_file_list.to_csv(self.path_dictionary_version + '{}.csv'.format(self.genre),
                                     mode='w', header=False, index=False, encoding='utf-8')
             files_name.to_csv(self.path_dictionary_version + '{}.csv'.format(self.genre),
-                              mode='a', header=False, encoding='utf-8')
+                              mode='a', header=False, encoding='shift_jis')
 
             print('List ' + self.path_dictionary_version + '{}.csv'.format(self.genre))
 
@@ -93,14 +96,13 @@ class File_info:
             shutil.copy(self.path_dictionary_pre_version + '{}.csv'.format(self.genre),
                         self.path_dictionary_version)
 
-            pre_files_name = pd.read_csv(self.path_dictionary_version + '{}.csv'.format(self.genre),
-                                         index_col=self.header_file_list[0])
-
             files_name = pd.DataFrame(self.files_name)
+
             files_name.set_index(pd.Index([i for i in range(self.n_pre_files, self.n_pre_files + len(files_name))]))
+            print([i for i in range(self.n_pre_files, self.n_pre_files + len(files_name))])
 
             files_name.to_csv(self.path_dictionary_version + '{}.csv'.format(self.genre),
-                              mode='a', header=False, encoding='utf-8')
+                              mode='a', header=False, encoding='shift_jis')
 
 
 
