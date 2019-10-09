@@ -28,7 +28,7 @@ class File_info:
         self.list_genre = path_info.list_genre
 
         path_info.make_directory()
-        path_info.make_internal_dictionary()
+        path_info.make_internal_dictionary(mkdir=True)
         self.n_dictionary_version = path_info.n_dictionary_version
         self.path_dictionary_version = path_info.path_dictionary_version
         self.path_dictionary_pre_version = path_info.path_dictionary_pre_version

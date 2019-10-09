@@ -30,16 +30,18 @@ class Path_info:
             if not os.path.exists(self.path_data_format + genre):
                 os.mkdir(self.path_data_format + genre)
 
-    def make_internal_dictionary(self):
+    def make_internal_dictionary(self, mkdir=True):
 
-        self.n_dictionary_version = len(os.listdir(self.path_dictionary))
+        self.directory_version_list = [os.path.basename(i) for i in os.listdir(self.path_dictionary)]
+        self.n_dictionary_version = len(self.directory_version_list)
         print('There are {} folder (num of version) in dictionary.'.format(self.n_dictionary_version))
 
         self.path_dictionary_version = self.path_dictionary + 'v{}//'.format(self.n_dictionary_version + 1)
         self.path_dictionary_pre_version = self.path_dictionary + 'v{}//'.format(self.n_dictionary_version)
 
-        if not os.path.exists(self.path_dictionary_version):
-            os.mkdir(self.path_dictionary_version)
+        if mkdir:
+            if not os.path.exists(self.path_dictionary_version):
+                os.mkdir(self.path_dictionary_version)
 
     def delete_format(self):
 
