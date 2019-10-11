@@ -10,6 +10,7 @@ class Path_info:
         self.path_abs = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
         self.path_data_original = self.path_abs + '//Data Original//'
         self.path_data_format = self.path_abs + '//Data Format//'
+        self.path_data_clear = self.path_abs + '//Data Clear//'
         self.path_dictionary = self.path_abs + '//Dictionary//'
 
         self.list_genre = [os.path.basename(i) for i in os.listdir(self.path_data_original)]
@@ -22,12 +23,16 @@ class Path_info:
             os.mkdir(self.path_data_original)
         if not os.path.exists(self.path_data_format):
             os.mkdir(self.path_data_format)
+        if not os.path.exists(self.path_data_clear):
+            os.mkdir(self.path_data_clear)
         if not os.path.exists(self.path_dictionary):
             os.mkdir(self.path_dictionary)
 
         for genre in self.list_genre:
             if not os.path.exists(self.path_data_format + genre):
                 os.mkdir(self.path_data_format + genre)
+            if not os.path.exists(self.path_data_clear + genre):
+                os.mkdir(self.path_data_clear + genre)
 
     def make_internal_dictionary(self, mkdir=True):
 
@@ -46,6 +51,8 @@ class Path_info:
 
         if os.path.exists(self.path_data_format):
             shutil.rmtree(self.path_data_format)
+        if os.path.exists(self.path_data_clear):
+            shutil.rmtree(self.path_data_clear)
 
     def delete_dictionary(self):
 

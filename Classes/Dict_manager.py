@@ -17,7 +17,7 @@ class File_info:
 
         self.mode = mode
 
-        self.header_file_list = ['#  ', 'name', 'title']
+        self.header_file_list = ['No', 'name', 'title']
         self.list_tags_target = ['lyricist', 'length', 'media', 'mood', 'title']
         self.kinds_of_file = ['mp3', 'aac', 'wma', 'wav']
 
@@ -98,8 +98,7 @@ class File_info:
 
             files_name = pd.DataFrame(self.files_name)
 
-            files_name.set_index(pd.Index([i for i in range(self.n_pre_files, self.n_pre_files + len(files_name))]))
-            print([i for i in range(self.n_pre_files, self.n_pre_files + len(files_name))])
+            files_name.index = files_name.index + self.n_pre_files
 
             files_name.to_csv(self.path_dictionary_version + '{}.csv'.format(self.genre),
                               mode='a', header=False, encoding='shift_jis')

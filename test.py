@@ -43,6 +43,7 @@ class Main:
             print(self.dict_values_after)
 
 
+
 if __name__ == '__main__':
 
     main = Main(1)
