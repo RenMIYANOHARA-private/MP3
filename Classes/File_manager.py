@@ -2,6 +2,7 @@ from Classes.Dict_manager import File_info
 from Classes.Path_manager import Path_info
 from mutagen.id3 import ID3, TIT2, TALB, TPE1, TRCK, APIC, TDRC, TCON
 from mutagen.mp3 import MP3
+import shutil
 import mutagen.id3
 import pandas as pd
 import os
@@ -57,36 +58,40 @@ class File_tags:
 
     def tags_clear(self):
 
+        shutil.copy(self.path_original_file, self.path_clear_file)
         m = MP3(self.path_clear_file, ID3=ID3)
+
         m["TRCK"] = TRCK(encoding=3, text='')
         m["TIT2"] = TIT2(encoding=3, text='')
         m['TCON'] = TCON(encoding=3, text='')
         m["TPE1"] = TPE1(encoding=3, text='')
         m["TALB"] = TALB(encoding=3, text='')
         m['TDRC'] = TDRC(encoding=3, text='')
+
         m.save()
 
     def tags_construct(self):
 
+        shutil.copy(self.path_clear_file, self.path_format_file)
         m = MP3(self.path_format_file, ID3=ID3)
 
-        if self.tags_content['track']:
-            m["TRCK"] = TRCK(encoding=3, text=str(self.tags_content['No']))
+        if not pd.isna(self.tags_content[self.header_file_list[0]]):
+            m["TRCK"] = TRCK(encoding=3, text=str(self.tags_content[self.header_file_list[0]]))
 
-        if self.tags_content['title']:
-            m["TIT2"] = TIT2(encoding=3, text=str(self.tags_content['title']))
+        if not pd.isna(self.tags_content[self.header_file_list[2]]):
+            m["TIT2"] = TIT2(encoding=3, text=str(self.tags_content[self.header_file_list[2]]))
 
-        if self.tags_content['genre']:
-            m['TCON'] = TCON(encoding=3, text=str(self.tags_content['genre']))
+        if not pd.isna(self.tags_content[self.header_file_list[3]]):
+            m['TCON'] = TCON(encoding=3, text=str(self.tags_content[self.header_file_list[3]]))
 
-        if self.tags_content['artist']:
-            m["TPE1"] = TPE1(encoding=3, text=str(self.tags_content['artist']))
+        if not pd.isna(self.tags_content[self.header_file_list[4]]):
+            m["TPE1"] = TPE1(encoding=3, text=str(self.tags_content[self.header_file_list[4]]))
 
-        if self.tags_content['album']:
-            m["TALB"] = TALB(encoding=3, text=str(self.tags_content['album']))
+        if not pd.isna(self.tags_content[self.header_file_list[5]]):
+            m["TALB"] = TALB(encoding=3, text=str(self.tags_content[self.header_file_list[5]]))
 
-        if self.tags_content['date']:
-            m['TDRC'] = TDRC(encoding=3, text=str(self.tags_content['date']))
+        if not pd.isna(self.tags_content[self.header_file_list[6]]):
+            m['TDRC'] = TDRC(encoding=3, text=str(self.tags_content[self.header_file_list[6]]))
 
         m.save()
 
@@ -94,8 +99,7 @@ class File_tags:
 
         for genre in self.list_genre:
 
-            self.dictionary = pd.read_csv(self.path_dictionary + self.which_version + '//' + genre + '.csv',
-                                          index_col=self.header_file_list[0])
+            self.dictionary = pd.read_csv(self.path_dictionary + self.which_version + '//' + genre + '.csv')
             files_name = self.dictionary[self.header_file_list[1]]
 
             for file_name in files_name:
@@ -133,8 +137,3 @@ class File_tags:
                     print('{} is not exist. '.format(file_name))
                     pass
 
-    def read_file_info_csv(self):
-
-        for genre in self.list_genre:
-
-            df = pd.read_csv(self.path)
