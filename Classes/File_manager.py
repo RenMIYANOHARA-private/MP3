@@ -1,7 +1,9 @@
 from Classes.Dict_manager import File_info
 from Classes.Path_manager import Path_info
+from mutagen.id3 import ID3, TIT2, TALB, TPE1, TRCK, APIC, TDRC, TCON
+from mutagen.mp3 import MP3
+import mutagen.id3
 import pandas as pd
-from mutagen.easyid3 import EasyID3
 import os
 
 class File_tags:
@@ -55,15 +57,38 @@ class File_tags:
 
     def tags_clear(self):
 
-        tags = EasyID3(self.path_original_file)
-        tags.save(self.path_clear_file)
+        m = MP3(self.path_clear_file, ID3=ID3)
+        m["TRCK"] = TRCK(encoding=3, text='')
+        m["TIT2"] = TIT2(encoding=3, text='')
+        m['TCON'] = TCON(encoding=3, text='')
+        m["TPE1"] = TPE1(encoding=3, text='')
+        m["TALB"] = TALB(encoding=3, text='')
+        m['TDRC'] = TDRC(encoding=3, text='')
+        m.save()
 
     def tags_construct(self):
 
-        tags = EasyID3(self.path_clear_file)
-        for tag in self.header_file_list[2:]:
-            tags[tag] = self.tags_content[tag]
-        tags.save(self.path_format_file)
+        m = MP3(self.path_format_file, ID3=ID3)
+
+        if self.tags_content['track']:
+            m["TRCK"] = TRCK(encoding=3, text=str(self.tags_content['No']))
+
+        if self.tags_content['title']:
+            m["TIT2"] = TIT2(encoding=3, text=str(self.tags_content['title']))
+
+        if self.tags_content['genre']:
+            m['TCON'] = TCON(encoding=3, text=str(self.tags_content['genre']))
+
+        if self.tags_content['artist']:
+            m["TPE1"] = TPE1(encoding=3, text=str(self.tags_content['artist']))
+
+        if self.tags_content['album']:
+            m["TALB"] = TALB(encoding=3, text=str(self.tags_content['album']))
+
+        if self.tags_content['date']:
+            m['TDRC'] = TDRC(encoding=3, text=str(self.tags_content['date']))
+
+        m.save()
 
     def loop_tags_clear(self):
 
@@ -100,7 +125,7 @@ class File_tags:
                 try:
 
                     self.path_clear_file = self.path_data_clear + genre + '//' + file_name
-                    self.path_original_file = self.path_data_format + genre + '//' + file_name
+                    self.path_format_file = self.path_data_format + genre + '//' + file_name
 
                     self.tags_construct()
 

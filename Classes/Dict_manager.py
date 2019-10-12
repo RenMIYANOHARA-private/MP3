@@ -17,7 +17,7 @@ class File_info:
 
         self.mode = mode
 
-        self.header_file_list = ['No', 'name', 'title']
+        self.header_file_list = ['No', 'name', 'title', 'genre', 'artist', 'album', 'date']
         self.list_tags_target = ['lyricist', 'length', 'media', 'mood', 'title']
         self.kinds_of_file = ['mp3', 'aac', 'wma', 'wav']
 
@@ -53,26 +53,28 @@ class File_info:
             print('There is no data in dictionary directory. ')
 
         else:
+            try:
 
-            data = pd.read_csv(self.path_dictionary_pre_version + '{}.csv'
-                               .format(self.genre), encoding='cp932')
-            pre_files_name = data[self.header_file_list[1]]
+                data = pd.read_csv(self.path_dictionary_pre_version + '{}.csv'.format(self.genre), encoding='cp932')
+                pre_files_name = data[self.header_file_list[1]]
 
-            self.n_pre_files = len(pre_files_name)
+                self.n_pre_files = len(pre_files_name)
 
-            for pre_file in pre_files_name:
+                for pre_file in pre_files_name:
 
-                try:
+                    try:
+                        self.files_name.remove(pre_file)
 
-                    self.files_name.remove(pre_file)
+                    except:
+                        print('{} is not exist in Original directory. '.format(pre_file))
 
-                except:
+            except:
 
-                    print('{} is not exist in Original directory. '.format(pre_file))
+                self.mode = 'w'
 
-            print('New files >>> ')
+            print('New {} files >>> '.format(self.genre))
             for file in self.files_name:
-                print('             ', file)
+                print('                 ', file)
 
     def dictionary_genre(self):
 

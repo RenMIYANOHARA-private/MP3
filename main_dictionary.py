@@ -1,4 +1,3 @@
-from Classes.Path_manager import Path_info
 from Classes.Dict_manager import File_info
 
 if __name__ == '__main__':
